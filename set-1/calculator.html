@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Based Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        width: 400px;
+        border: 1px solid #000;
+        padding: 20px;
+        margin: 20px auto;
+      }
+      input,
+      select,
+      button {
+        width: 100%;
+        margin: 10px 0;
+        padding: 8px;
+      }
+      h2 {
+        text-align: center;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Signup Section -->
+    <div id="signup-section" class="container">
+      <h2>Signup</h2>
+      <label for="name">Name:</label>
+      <input type="text" id="signup-name" required />
+
+      <label for="email">Email:</label>
+      <input type="email" id="signup-email" required />
+
+      <label for="password">Password:</label>
+      <input type="password" id="signup-password" required />
+
+      <label for="operator">Choose Operator:</label>
+      <select id="signup-operator" required>
+        <option value="add">Addition (+)</option>
+        <option value="subtract">Subtraction (-)</option>
+        <option value="multiply">Multiplication (*)</option>
+      </select>
+
+      <button onclick="signup()">Submit</button>
+    </div>
+
+    <!-- Login Section -->
+    <div id="login-section" class="container hidden">
+      <h2>Login</h2>
+      <label for="email">Email:</label>
+      <input type="email" id="login-email" required />
+
+      <label for="password">Password:</label>
+      <input type="password" id="login-password" required />
+
+      <button onclick="login()">Login</button>
+    </div>
+
+    <!-- Calculator Section -->
+    <div id="calculator-section" class="container hidden">
+      <h2>You have registered for <span id="operator-name"></span></h2>
+      <p>Welcome <span id="user-name"></span></p>
+
+      <label for="input1">Input 1:</label>
+      <input type="number" id="input1" required />
+
+      <label for="input2">Input 2:</label>
+      <input type="number" id="input2" required />
+
+      <label for="output">Output:</label>
+      <input type="text" id="output" readonly />
+
+      <button onclick="calculate()">Calculate</button>
+    </div>
+
+    <script>
+      // User data storage
+      let userData = {};
+
+      // Signup function
+      function signup() {
+        const name = document.getElementById("signup-name").value;
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+        const operator = document.getElementById("signup-operator").value;
+
+        if (!name || !email || !password) {
+          alert("Please fill all fields.");
+          return;
+        }
+
+        // Store user data
+        userData = {
+          name: name,
+          email: email,
+          password: password,
+          operator: operator,
+        };
+
+        // Hide signup and show login section
+        document.getElementById("signup-section").classList.add("hidden");
+        document.getElementById("login-section").classList.remove("hidden");
+      }
+
+      // Login function
+      function login() {
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+
+        // Check if user data matches
+        if (email === userData.email && password === userData.password) {
+          alert("Login successful!");
+
+          // Show user info and operator in the calculator section
+          document.getElementById("user-name").textContent = userData.name;
+          document.getElementById("operator-name").textContent =
+            getOperatorName(userData.operator);
+
+          // Hide login and show calculator section
+          document.getElementById("login-section").classList.add("hidden");
+          document
+            .getElementById("calculator-section")
+            .classList.remove("hidden");
+        } else {
+          alert("Invalid email or password.");
+        }
+      }
+
+      // Function to display operator name
+      function getOperatorName(operator) {
+        switch (operator) {
+          case "add":
+            return "Addition";
+          case "subtract":
+            return "Subtraction";
+          case "multiply":
+            return "Multiplication";
+          default:
+            return "Unknown";
+        }
+      }
+
+      // Calculator function
+      function calculate() {
+        const input1 = parseFloat(document.getElementById("input1").value);
+        const input2 = parseFloat(document.getElementById("input2").value);
+        let result;
+
+        if (isNaN(input1) || isNaN(input2)) {
+          alert("Please enter valid numbers.");
+          return;
+        }
+
+        // Perform the calculation based on the chosen operator
+        switch (userData.operator) {
+          case "add":
+            result = input1 + input2;
+            break;
+          case "subtract":
+            result = input1 - input2;
+            break;
+          case "multiply":
+            result = input1 * input2;
+            break;
+          default:
+            result = "Unknown operation";
+        }
+
+        // Display the result
+        document.getElementById("output").value = result;
+      }
+    </script>
+  </body>
+</html>
